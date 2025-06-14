@@ -133,4 +133,10 @@
 }
 
 
+.react-datepicker {
+  width: 100% !important;
+}
 
+.react-datepicker__month-container {
+  width: 100% !important;
+}

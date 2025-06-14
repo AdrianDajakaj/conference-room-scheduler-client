@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 
 export interface ModalProps {
@@ -33,15 +32,18 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, children }) => {
         transition-opacity duration-500 ease-out
         ${isVisible ? "opacity-100" : "opacity-0"}
         overflow-y-auto
-        flex justify-center items-start py-20
+        flex justify-center items-start py-10 md:py-20
       `}
       onClick={onClose}
     >
-      <div className="relative mt-5" onClick={(e) => e.stopPropagation()}>
+      <div 
+        className="relative mt-5 w-full max-w-[95vw] md:max-w-[90vw] xl:max-w-[85vw]" 
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
           className={`
-            absolute -top-20 right-0
+            absolute -top-12 md:-top-20 right-0
             w-10 h-10
             bg-white dark:bg-gray-800
             border border-gray-200 dark:border-gray-700
@@ -62,10 +64,10 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, children }) => {
           className={`
             bg-white dark:bg-gray-800
             rounded-2xl
-            w-[95vw] sm:w-full max-w-4xl
-            h-auto max-h-[90vh]
+            w-full
+            h-auto max-h-[90vh] md:max-h-[95vh]
             overflow-y-auto
-            p-6
+            p-4 md:p-6
             shadow-lg
             transform transition-transform duration-500 ease-out
             ${isVisible ? "scale-100" : "scale-95"}

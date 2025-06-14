@@ -1,11 +1,13 @@
 "use client";
 import { cn } from "@/lib/utils";
 import React, { useState, createContext, useContext } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { IconX } from "@tabler/icons-react";
-import { RiArrowDownSLine, RiArrowUpSLine } from "react-icons/ri";
-import {MdFilterList} from "react-icons/md";
-
+import { RiArrowDownSLine, RiArrowUpSLine, RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
+import { MdFilterList } from "react-icons/md";
+import DatePicker from "react-datepicker";
+import { pl } from "date-fns/locale";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface Links {
   label: string;
@@ -19,9 +21,7 @@ interface SidebarContextProps {
   animate: boolean;
 }
 
-const SidebarContext = createContext<SidebarContextProps | undefined>(
-  undefined
-);
+const SidebarContext = createContext<SidebarContextProps | undefined>(undefined);
 
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
@@ -81,9 +81,6 @@ export const SidebarBody = (props: React.ComponentProps<typeof motion.div>) => {
   );
 };
 
-
-
-
 export const DesktopSidebar = ({
   className,
   children,
@@ -91,22 +88,20 @@ export const DesktopSidebar = ({
 }: React.ComponentProps<typeof motion.div>) => {
   const { open, setOpen, animate } = useSidebar();
   return (
-    <>
-      <motion.div
-        className={cn(
-          "h-full  py-4 hidden  md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[300px] shrink-0 ",
-          className
-        )}
-        animate={{
-          width: animate ? (open ? "300px" : "60px") : "300px",
-        }}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-        {...props}
-      >
-        {children}
-      </motion.div>
-    </>
+    <motion.div
+      className={cn(
+        "h-full py-4 hidden md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[300px] shrink-0",
+        className
+      )}
+      animate={{
+        width: animate ? (open ? "300px" : "60px") : "300px",
+      }}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      {...props}
+    >
+      {children}
+    </motion.div>
   );
 };
 
@@ -146,7 +141,6 @@ export const MobileSidebar = ({
   );
 };
 
-
 export const SidebarLink = ({
   link,
   className,
@@ -165,12 +159,16 @@ export const SidebarLink = ({
   const [priceFrom, setPriceFrom] = useState("");
   const [priceTo, setPriceTo] = useState("");
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
-  const [showAllEquipment, setShowAllEquipment] = useState(false); 
-  const visibleEquipmentCount = 2; 
+  const [showAllEquipment, setShowAllEquipment] = useState(false);
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [startDate, endDate] = dateRange;
+  
+  const visibleEquipmentCount = 2;
   const isLocation = link.label === "Lokalizacja";
   const isCapacity = link.label === "Pojemność";
   const isPrice = link.label === "Cena";
   const isEquipment = link.label === "Wyposażenie";
+  const isAvailability = link.label === "Dostępność";
 
   const handleEquipmentToggle = (label: string) => {
     setSelectedEquipment(prev =>
@@ -190,14 +188,14 @@ export const SidebarLink = ({
 
   return (
     <div className="w-full" {...props}>
-      {open && (isLocation || isCapacity || isPrice || isEquipment) && (
+      {open && (isLocation || isCapacity || isPrice || isEquipment || isAvailability) && (
         <div className="flex items-center gap-2 mb-1 px-1 text-xs font-semibold text-neutral-500 uppercase">
           {link.icon}
           {link.label}
         </div>
       )}
 
-      {(isLocation || isCapacity || isPrice || isEquipment) && open ? (
+      {(isLocation || isCapacity || isPrice || isEquipment || isAvailability) && open ? (
         <motion.div
           animate={{
             opacity: animate ? (open ? 1 : 0) : 1,
@@ -212,55 +210,94 @@ export const SidebarLink = ({
               className="w-full rounded-lg border border-neutral-300 bg-white px-4 py-2 text-sm shadow-sm focus:border-black focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-white"
             />
           ) : isEquipment ? (
-  <div className="flex flex-col gap-2">
-    <div className="grid grid-cols-2 gap-2">
-      {visibleEquipment.map((option, index) => (
-        <div key={index} className="relative group">
-          <button
-            onClick={() => handleEquipmentToggle(option.label)}
-            className={cn(
-              "flex items-center gap-2 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700",
-              selectedEquipment.includes(option.label) 
-                ? "bg-neutral-100 border-black dark:bg-neutral-700 dark:border-white"
-                : ""
-            )}
-          >
-            {option.icon}
-            <span className="text-neutral-700 dark:text-neutral-200 text-xs truncate">
-              {option.label}
-            </span>
-          </button>
-          {/* Tooltip */}
-          <div className="absolute z-10 hidden group-hover:block bottom-full mb-2 left-1/2 transform -translate-x-1/2">
-            <div className="bg-black text-white text-xs rounded py-1 px-2 whitespace-nowrap">
-              {option.label}
-            </div>
-            <div className="absolute w-2 h-2 bg-black transform rotate-45 -translate-x-1/2 left-1/2 -bottom-1"></div>
-          </div>
-        </div>
-      ))}
-    </div>
+            <div className="flex flex-col gap-2">
+              <div className="grid grid-cols-2 gap-2">
+                {visibleEquipment.map((option, index) => (
+                  <div key={index} className="relative group">
+                    <button
+                      onClick={() => handleEquipmentToggle(option.label)}
+                      className={cn(
+                        "flex items-center gap-2 w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700",
+                        selectedEquipment.includes(option.label) 
+                          ? "bg-neutral-100 border-black dark:bg-neutral-700 dark:border-white"
+                          : ""
+                      )}
+                    >
+                      {option.icon}
+                      <span className="text-neutral-700 dark:text-neutral-200 text-xs truncate">
+                        {option.label}
+                      </span>
+                    </button>
+                    <div className="absolute z-10 hidden group-hover:block bottom-full mb-2 left-1/2 transform -translate-x-1/2">
+                      <div className="bg-black text-white text-xs rounded py-1 px-2 whitespace-nowrap">
+                        {option.label}
+                      </div>
+                      <div className="absolute w-2 h-2 bg-black transform rotate-45 -translate-x-1/2 left-1/2 -bottom-1"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-    {equipmentOptions.length > visibleEquipmentCount && (
-      <button
-        onClick={toggleShowAllEquipment}
-        className="flex items-center justify-center gap-1 w-full text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 mt-1"
-      >
-        {showAllEquipment ? (
-          <>
-            <RiArrowUpSLine className="h-4 w-4" />
-            Zwiń
-          </>
-        ) : (
-          <>
-            <RiArrowDownSLine className="h-4 w-4" />
-            Rozwiń ({equipmentOptions.length - visibleEquipmentCount} więcej)
-          </>
-        )}
-      </button>
-    )}
-  </div>
-) : (
+              {equipmentOptions.length > visibleEquipmentCount && (
+                <button
+                  onClick={toggleShowAllEquipment}
+                  className="flex items-center justify-center gap-1 w-full text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 mt-1"
+                >
+                  {showAllEquipment ? (
+                    <>
+                      <RiArrowUpSLine className="h-4 w-4" />
+                      Zwiń
+                    </>
+                  ) : (
+                    <>
+                      <RiArrowDownSLine className="h-4 w-4" />
+                      Rozwiń ({equipmentOptions.length - visibleEquipmentCount} więcej)
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          ) : isAvailability ? (
+            <div className="w-full">
+          <DatePicker
+            selectsRange={true}
+            startDate={startDate}
+            endDate={endDate}
+            onChange={(update) => setDateRange(update)}
+            inline
+            monthsShown={1}
+            locale={pl}
+            minDate={new Date()}
+            calendarClassName="!border-none !shadow-none !w-full"
+            wrapperClassName="!w-full"
+            dayClassName={() => "!text-sm"}
+            weekDayClassName={() => "!text-xs"}
+            renderCustomHeader={({
+              monthDate,
+              decreaseMonth,
+              increaseMonth,
+            }) => (
+              <div className="flex items-center justify-between px-1 mb-1">
+                <button
+                  onClick={decreaseMonth}
+                  className="p-1 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded"
+                >
+                  <RiArrowLeftSLine className="w-4 h-4" />
+                </button>
+                <span className="text-sm font-medium text-neutral-700 dark:text-neutral-200">
+                  {monthDate.toLocaleString('pl-PL', { month: 'long' })}
+                </span>
+                <button
+                  onClick={increaseMonth}
+                  className="p-1 text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded"
+                >
+                  <RiArrowRightSLine className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          />
+        </div>
+      ) : (
             <div className="flex gap-2">
               <input
                 type="number"
@@ -306,7 +343,6 @@ export const SidebarLink = ({
     </div>
   );
 };
-
 
 export const SidebarFilterButton = ({
   className,
