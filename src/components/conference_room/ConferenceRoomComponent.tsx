@@ -16,6 +16,7 @@ interface ConferenceRoomProps {
   }>;
   images: string[];
   isUserLoggedIn: boolean;
+  excludedDates?: Date[];
 }
 
 export function ConferenceRoomComponent({
@@ -26,7 +27,8 @@ export function ConferenceRoomComponent({
   price = "Cena zł",
   equipment = [],
   images = [],
-  isUserLoggedIn = false
+  isUserLoggedIn = false,
+  excludedDates = []
 }: ConferenceRoomProps) {
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -90,6 +92,7 @@ export function ConferenceRoomComponent({
           equipment={equipment}
           images={images}
           isUserLoggedIn={isUserLoggedIn}
+          excludedDates={excludedDates}
         />
       </Modal>    
     </>

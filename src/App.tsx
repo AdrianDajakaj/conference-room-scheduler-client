@@ -224,6 +224,23 @@ const equipmentOptions = [
     setAuthMode(mode);
     setShowAuthModal(true);
   };
+
+  const bookedDates = {
+    "Sala konferencyjna A": [
+      new Date(2025, 5, 14), 
+      new Date(2025, 5, 17),
+      new Date(2025, 5, 18),
+      new Date(2025, 5, 1),
+      new Date(2025, 5, 2),   
+    ],
+    "Sala konferencyjna B": [
+      new Date(2025, 5, 14), 
+      new Date(2025, 5, 17),
+      new Date(2025, 5, 18),
+      new Date(2025, 5, 1),
+      new Date(2025, 5, 2),  
+    ]
+  };
     
     return (
     <div className={cn(
@@ -307,6 +324,7 @@ const equipmentOptions = [
               ]}
               images={[img1, img2, img3]}
               isUserLoggedIn={isLoggedIn}
+              excludedDates={bookedDates["Sala konferencyjna A"]}
           />
 
           <ConferenceRoomComponent
@@ -439,6 +457,7 @@ const equipmentOptions = [
               ]}
               images={[img4, img5, img6, img7]}
               isUserLoggedIn={isLoggedIn}
+              excludedDates={bookedDates["Sala konferencyjna A"]}
           />
          </div>
         </div>
