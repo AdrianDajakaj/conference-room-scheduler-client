@@ -7,7 +7,8 @@ import {   RiProjector2Line , RiArtboardLine,
 import { MdOutlineFastfood, MdOutlineCoffeeMaker, MdTabletMac, MdRollerShadesClosed, MdShelves,
   MdOutlinePinDrop , MdOutlinePriceChange, MdReduceCapacity, MdOutlineSettingsInputComponent, MdFilterList,
   MdLogin, MdOutlineSpeakerGroup, MdOutlineSignalWifiStatusbar4Bar, MdMic, MdOutlineSettingsInputHdmi, MdCalendarMonth, 
-  MdClose
+  MdClose,
+  MdLogout
     } from "react-icons/md";
 import { BsEthernet } from "react-icons/bs";
 import { LuAlarmSmoke } from "react-icons/lu";
@@ -31,7 +32,8 @@ import img4 from "@/assets/img4.jpg";
 import img5 from "@/assets/img5.jpg";
 import img6 from "@/assets/img6.jpg";
 import img7 from "@/assets/img7.jpg";
-
+import img8 from "@/assets/img8.jpg";
+import img9 from "@/assets/img9.jpg";
 
 
 
@@ -234,11 +236,18 @@ const equipmentOptions = [
       new Date(2025, 5, 2),   
     ],
     "Sala konferencyjna B": [
-      new Date(2025, 5, 14), 
-      new Date(2025, 5, 17),
-      new Date(2025, 5, 18),
-      new Date(2025, 5, 1),
-      new Date(2025, 5, 2),  
+      new Date(2025, 5, 21), 
+      new Date(2025, 5, 27),
+      new Date(2025, 5, 28),
+      new Date(2025, 5, 29),
+      new Date(2025, 5, 30),  
+    ],
+    "Sala konferencyjna C": [
+      new Date(2025, 5, 1), 
+      new Date(2025, 5, 2),
+      new Date(2025, 5, 3),
+      new Date(2025, 5, 4),
+      new Date(2025, 5, 25),  
     ]
   };
     
@@ -287,7 +296,7 @@ const equipmentOptions = [
               {isLoggedIn ? (
                 <button
                   onClick={handleLogout}
-                  className="flex items-center justify-center rounded-md bg-black px-4 py-2 text-sm text-white shadow hover:bg-neutral-800 dark:bg-white dark:text-black"
+                  className="cursor-pointer flex items-center justify-center rounded-md bg-black px-4 py-2 text-sm text-white shadow hover:bg-neutral-800 dark:bg-white dark:text-black"
                 >
                   <span className="hidden md:block">Wyloguj</span>
                   <MdLogin className="w-5 h-5 md:hidden" />
@@ -298,7 +307,7 @@ const equipmentOptions = [
                   className="flex items-center justify-center rounded-md bg-black px-4 py-2 text-sm text-white shadow hover:bg-neutral-800 dark:bg-white dark:text-black cursor-pointer"
                 >
                   <span className="hidden md:block">Zaloguj</span>
-                  <MdLogin className="w-5 h-5 md:hidden" />
+                  <MdLogout className="w-5 h-5 md:hidden" />
                 </button>
               )}
             </div>
@@ -457,7 +466,132 @@ const equipmentOptions = [
               ]}
               images={[img4, img5, img6, img7]}
               isUserLoggedIn={isLoggedIn}
-              excludedDates={bookedDates["Sala konferencyjna A"]}
+              excludedDates={bookedDates["Sala konferencyjna B"]}
+          />
+
+          <ConferenceRoomComponent
+              name="Sala konferencyjna C"
+              offer="Orange Polska"
+              organization_url="https://www.orange.pl/"
+              address="Warszawa, al. Jerozolimskie 160"
+              price="już od 400 zł / dobę"
+              equipment={[
+                {
+                  label: "Stół konferencyjny",
+                  icon: <GiRoundTable className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Krzesła ergonomiczne",
+                  icon: <PiOfficeChair className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Mównica / pulpit",
+                  icon: <PiLecternLight className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Regały na dokumenty",
+                  icon: <MdShelves className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+
+                // 📽 Sprzęt audiowizualny
+                {
+                  label: "Projektor",
+                  icon: <RiProjector2Line className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Telewizor",
+                  icon: <RiTv2Line className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Wideokonferencja",
+                  icon: <RiWebcamLine className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Nagłośnienie",
+                  icon: <MdOutlineSpeakerGroup className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Mikrofony",
+                  icon: <MdMic className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Tablica",
+                  icon: <RiArtboardLine className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+
+                // 💻 Sprzęt komputerowy i łączność
+                {
+                  label: "Komputer",
+                  icon: <RiComputerLine className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Tablet / panel sterujący salą",
+                  icon: <MdTabletMac className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "WiFi",
+                  icon: <MdOutlineSignalWifiStatusbar4Bar className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Gniazda i kable HDMI, VGA",
+                  icon: <MdOutlineSettingsInputHdmi className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Gniazdo Ethernet RJ45",
+                  icon: <BsEthernet className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "USB",
+                  icon: <RiUsbLine className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+
+                // 💡 Wyposażenie dodatkowe
+                
+                // 🍽 Strefa relaksu i poczęstunek
+                {
+                  label: "Katering",
+                  icon: <MdOutlineFastfood className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Ekspres do kawy",
+                  icon: <MdOutlineCoffeeMaker className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Lodówka",
+                  icon: <RiFridgeLine className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Dystrybutor wody pitnej",
+                  icon: <RiWaterFlashLine className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+
+                // 🛟 Bezpieczeństwo i higiena
+                {
+                  label: "Płyn do dezynfekcji",
+                  icon: <GiLiquidSoap className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Apteczka pierwszej pomocy",
+                  icon: <PiFirstAidKit className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Defibrylator",
+                  icon: <GiDefibrilate className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+                {
+                  label: "Czujnik dymu",
+                  icon: <LuAlarmSmoke className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                },
+
+                // ❄️ Klimatyzacja i wentylacja
+                {
+                  label: "Klimatyzacja / Wentylacja",
+                  icon: <RiSnowflakeLine className="h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                }
+              ]}
+              images={[img8, img9]}
+              isUserLoggedIn={isLoggedIn}
+              excludedDates={bookedDates["Sala konferencyjna C"]}
           />
          </div>
         </div>
