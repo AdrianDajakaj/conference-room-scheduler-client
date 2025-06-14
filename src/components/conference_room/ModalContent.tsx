@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { pl } from 'date-fns/locale';
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
+import { MdCheckCircle } from "react-icons/md";
 
 interface ModalContentProps {
   name: string;
@@ -25,9 +26,16 @@ export const ModalContent: React.FC<ModalContentProps> = ({
   const [current, setCurrent] = useState(0);
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [startDate, endDate] = dateRange;
+  const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
 
   const prev = () => setCurrent((c) => (c - 1 + images.length) % images.length);
   const next = () => setCurrent((c) => (c + 1) % images.length);
+
+  const handleBooking = () => {
+    // Tutaj można dodać logikę wysyłania rezerwacji
+    setIsBookingConfirmed(true);
+    setTimeout(() => setIsBookingConfirmed(false), 5000); // Wiadomość znika po 5 sekundach
+  };
 
   return (
     <div className="flex flex-col lg:flex-row h-full w-full gap-4 md:gap-6">
@@ -154,6 +162,34 @@ export const ModalContent: React.FC<ModalContentProps> = ({
             )}
           />
         </div>
+
+        {/* Przycisk rezerwacji */}
+        {isUserLoggedIn && (
+          <div className="mt-4 flex flex-col items-center space-y-2">
+            <button 
+              onClick={handleBooking}
+              disabled={!startDate || !endDate}
+              className={`
+                px-6 py-3 w-full
+                bg-blue-600 text-white 
+                rounded-xl hover:bg-blue-700 
+                transition text-base font-medium
+                disabled:bg-gray-300 disabled:text-gray-500
+                disabled:cursor-not-allowed
+                flex items-center justify-center cursor-pointer
+              `}
+            >
+              Zarezerwuj {startDate && endDate && `(${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()})`}
+            </button>
+            
+            {isBookingConfirmed && (
+              <div className="flex items-center text-green-600 dark:text-green-400 text-sm p-2 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                <MdCheckCircle className="mr-2" />
+                Rezerwacja przebiegła pomyślnie. Szczegóły zostaną przesłane na przypisany do konta adres e-mail.
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Prawa kolumna - informacje */}
@@ -179,17 +215,6 @@ export const ModalContent: React.FC<ModalContentProps> = ({
             </div>
           )}
         </div>
-
-        {isUserLoggedIn && (
-          <div className="mt-4 flex justify-end">
-            <button 
-              className="px-4 py-2 md:px-6 md:py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition text-sm md:text-base"
-              disabled={!startDate || !endDate}
-            >
-              Zarezerwuj {startDate && endDate && `(${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()})`}
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
